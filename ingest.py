@@ -2,7 +2,7 @@
 # ingest.py
 
 import os
-from langchain_community.document_loaders import TextLoader
+from langchain_community.document_loaders import TextLoader, PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 # from langchain_openai import OpenAIEmbeddings
@@ -19,10 +19,17 @@ DB_PATH = "chroma_db"
 documents = []
 # Load all text & markdown files
 for file in os.listdir(DATA_PATH):
+    path = os.path.join(DATA_PATH, file)
+
     if file.endswith(".txt") or file.endswith(".md"):
-        loader = TextLoader(os.path.join(DATA_PATH, file))
-        print("Load all text & markdown files", loader)
-        documents.extend(loader.load())
+        loader = TextLoader(path)
+    elif file.endswith(".pdf"):
+        loader = PyPDFLoader(path)
+    else:
+        continue
+
+    documents.extend(loader.load())
+
 # chunking
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=100)
 chunks = text_splitter.split_documents(documents)
