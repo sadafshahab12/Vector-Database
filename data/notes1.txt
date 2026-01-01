@@ -1,0 +1,2 @@
+APIs allow different software systems to communicate with each other.
+REST APIs use HTTP methods like GET, POST, PUT, and DELETE.
